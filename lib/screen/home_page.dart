@@ -1,6 +1,8 @@
 import 'package:batch_a_29_dec/helper/menu_widget.dart';
 import 'package:batch_a_29_dec/model/admin_post_model.dart';
 import 'package:batch_a_29_dec/screen/log_in.dart';
+import 'package:batch_a_29_dec/screen/student_details.dart';
+import 'package:batch_a_29_dec/screen/user_profile.dart';
 import 'package:batch_a_29_dec/utills/all_color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,8 +33,8 @@ class _HomePageState extends State<HomePage> {
     //adminPostModel=AdminPostModel.fromMap(allData[0]);
     for(int i=0; i<allData.length;i++)
       st.add(AdminPostModel.fromMap(allData[i]));
-    print(allData[0]);
-    print("1111111111");
+    // print(allData[0]);
+    // print("1111111111");
   }
   @override
   void initState() {
@@ -45,7 +47,8 @@ class _HomePageState extends State<HomePage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: SliderMenuContainer(
+      body:
+      SliderMenuContainer(
         appBarColor: allColors.appcontColor,
         key: _key,
         sliderMenuCloseSize: 0,
@@ -71,18 +74,26 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               title = title;
               if (title == "HOME") {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder:
-                //       (context) => MyHomePage()),
-                // );
-              } else if (title == "TRANSLATOR") {
 
-              } else if (title == "QUIZ") {
+              } else if (title == "MY PROFILE") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder:
+                      (context) => UserProfile()),
+                );
+              } else if (title == "STUDENT DETAILS") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder:
+                      (context) => StudentDetails()),
+                );
 
-              } else if (title == "WORDS") {
+              }
+              else if (title == "SHARE APP") {
 
-              } else if (title == "LOG OUT") {
+
+              }
+              else if (title == "LOG OUT") {
                 FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement
                   (context, MaterialPageRoute
@@ -91,11 +102,23 @@ class _HomePageState extends State<HomePage> {
             });
           },
         ),
+        // ekhan theke home page er design suru
         sliderMain: Container(
           color: Colors.white,
-          child: SingleChildScrollView(
+          child:
+              st.length<=0?
+               Container(
+                 width: MediaQuery.of(context).size.width,
+                   child: Padding(
+                     padding: const EdgeInsets.all(148.0),
+                     child: CircularProgressIndicator(
+                       color: Colors.teal,
+                     ),
+                   ))
+          :SingleChildScrollView(
             child: Column(
               children: [
+
                 for(int j=st.length-1;j>=0;j--)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -111,8 +134,10 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               children: [
                                 CircleAvatar(
+                                  backgroundImage: AssetImage
+                                    ('assets/avatar.png',),
                                   radius: 30,
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: Colors.grey,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),

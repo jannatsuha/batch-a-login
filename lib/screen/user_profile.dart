@@ -51,107 +51,86 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: allColor.appColor,
         title: Text("User Profile"),
         centerTitle: true,
       ),
-      body: WillPopScope(
-        onWillPop: ()async{
-          alert(
-            context,
-            title: Text('Alert'),
-            content: Text('Do you want to exit?'),
-            textOK: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                  onTap: (){
-                    exit(0);
-                  },
-                    child: Text('Yes')),
-                SizedBox(
-                  width: 20,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: 150,
+                width: 150,
+                child: ClipOval(
+                  child: url==null? Text("Image not found"):
+                  Image.network(url!,fit: BoxFit.cover,),
                 ),
-                Text('No'),
-              ],
-            ),
-          );
-          return true;
-        },
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: 150,
-                  width: 150,
-                  child: ClipOval(
-                    child: url==null? Text("Image not found"):
-                    Image.network(url!,fit: BoxFit.cover,),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: allColor.appColor
+                ),
+                  onPressed: () async{
+                  final image2= await ImagePicker().pickImage(
+                      source: ImageSource.gallery);
+                  if(image2==null) return;
+                  final tempImage= File(image2.path);
+                  setState(() {
+                    image= tempImage;
+                  });
+                  saveImage();
+                  getImageFromStorage();
+                  setState(() {
+                    url;
+                  });
+              },
+                  child: Text("Change Picture")),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: allColor.appColor
                   ),
-                ),
-                ElevatedButton(onPressed: () async{
-                    final image2= await ImagePicker().pickImage(
-                        source: ImageSource.gallery);
-                    if(image2==null) return;
-                    final tempImage= File(image2.path);
-                    setState(() {
-                      image= tempImage;
-                    });
-                    saveImage();
+                  onPressed: (){
                     getImageFromStorage();
-                    setState(() {
-                      url;
-                    });
-                },
-                    child: Text("Change Picture")),
-                ElevatedButton(
-                    onPressed: (){
-                      getImageFromStorage();
-                    },
-                    child: Text("Refresh")),
-                Text("Name: ${userModel.name.toString()}",
-                style: TextStyle(
-                  fontSize: 18
-                ),),
+                  },
+                  child: Text("Refresh")),
+             Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text("Name: ${userModel.name.toString()}",
+                   style: TextStyle(
+                       fontSize: 18
+                   ),),
+                 Text("Student Id: ${userModel.id.toString()}",
+                   style: TextStyle(
+                       fontSize: 18
+                   ),),
 
-                Text("Age: ${userModel.age.toString()}",
-                  style: TextStyle(
-                      fontSize: 18
-                  ),),
-                Text("Phone: ${userModel.phone.toString()}",
-                  style: TextStyle(
-                      fontSize: 18
-                  ),),
-                Text("Email: ${userModel.email.toString()}",
-                  style: TextStyle(
-                      fontSize: 18
-                  ),),
-                Text("Dept: ${userModel.dept.toString()}",
-                  style: TextStyle(
-                      fontSize: 18
-                  ),),
-                Text("Blood Group: ${userModel.bloodGroup.toString()}",
-                  style: TextStyle(
-                      fontSize: 18
-                  ),),
-                SizedBox(height: 30,),
-                SizedBox(height: 30,),
-                ElevatedButton(
-                    onPressed: (){
+                 Text("Age: ${userModel.age.toString()}",
+                   style: TextStyle(
+                       fontSize: 18
+                   ),),
+                 Text("Phone: ${userModel.phone.toString()}",
+                   style: TextStyle(
+                       fontSize: 18
+                   ),),
+                 Text("Email: ${userModel.email.toString()}",
+                   style: TextStyle(
+                       fontSize: 18
+                   ),),
+                 Text("Dept: ${userModel.dept.toString()}",
+                   style: TextStyle(
+                       fontSize: 18
+                   ),),
+                 Text("Blood Group: ${userModel.bloodGroup.toString()}",
+                   style: TextStyle(
+                       fontSize: 18
+                   ),),
 
-                    },
-                    child: Text("LOG OUT")),
-                ElevatedButton(
-                    onPressed: (){
-                      FirebaseAuth.instance.signOut();
-                      Navigator.pushReplacement
-                        (context, MaterialPageRoute
-                        (builder: (context)=>ZoomImage()));
-                    },
-                    child: Text("Next Page")),
+               ],
+             )
 
-              ],
-            ),
+            ],
           ),
         ),
       ),

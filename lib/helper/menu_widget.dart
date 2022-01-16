@@ -23,10 +23,10 @@ class MenuWidget extends StatelessWidget {
           ),
           CircleAvatar(
             backgroundColor:
-            allColors.detailTextColor,
+            allColors.apptext,
             radius: 100,
             backgroundImage: AssetImage
-              ('assets/cover1.jpg',),
+              ('assets/avatar.png',),
           ),
           SizedBox(
             height: 10,
@@ -55,10 +55,10 @@ class MenuWidget extends StatelessWidget {
             height: 20,
           ),
           sliderItem('HOME', Icons.home),
-          sliderItem("TRANSLATOR", Icons.chat_bubble),
-          sliderItem('QUIZ', Icons.list_alt_outlined),
-          sliderItem('WORDS', Icons.home_outlined),
-          sliderItem('LOG OUT', Icons.account_box_outlined)
+          sliderItem("MY PROFILE", Icons.account_circle_sharp),
+          sliderItem('STUDENT DETAILS', Icons.list_alt_outlined),
+          sliderItem('SHARE APP', Icons.share),
+          sliderItem('LOG OUT', Icons.logout)
         ],
       ),
     );
@@ -68,13 +68,13 @@ class MenuWidget extends StatelessWidget {
       title: Text(
         title,
         style:
-        TextStyle(color: allColors.detailTextColor
+        TextStyle(color: allColors.apptext
             , fontSize: 20),
       ),
       leading: Icon(
         icons,
         size: 30,
-        color: allColors.detailTextColor,
+        color: allColors.apptext,
       ),
       onTap: () {
         onItemClick(title);

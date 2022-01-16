@@ -1,5 +1,5 @@
 import 'dart:io';
-
+//import 'package:path_provider/path_provider.dart';
 import 'package:alert_dialog/alert_dialog.dart';
 import 'package:batch_a_29_dec/helper/custom_button.dart';
 import 'package:batch_a_29_dec/helper/custom_text_field.dart';
@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 class SignUp extends StatefulWidget {
@@ -25,7 +26,10 @@ List<String> deptList=[
   "Graphics Design",
   "RAC",
   "Electrics",
-  "Electrical"
+  "Electrical",
+  "Driving",
+  "Welding",
+  "Garments"
 ];
 List<String>bloodGroupList=[
   "A+",
@@ -43,6 +47,7 @@ String ? initValBloodGroup;
 final _auth= FirebaseAuth.instance;
 AllColor allColor= AllColor();
 TextEditingController _emailController=TextEditingController();
+TextEditingController _idController=TextEditingController();
 TextEditingController _passController=TextEditingController();
 TextEditingController _confirmPassController=TextEditingController();
 TextEditingController _ageController=TextEditingController();
@@ -144,6 +149,15 @@ class _SignUpState extends State<SignUp> {
                 hintText: "Enter your full-name",
                 labelText: "Full-Name",
                 controller: _nameController ,
+                obsecureVal: false,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              CustomTextField(
+                hintText: "Enter Student ID",
+                labelText: "Student ID",
+                controller: _idController ,
                 obsecureVal: false,
               ),
               SizedBox(
@@ -304,7 +318,7 @@ class _SignUpState extends State<SignUp> {
 }
 void signUp(String email, String password,
     context,_formKeySignUp)async{
-  if(_formKeySignUp.currentState!.validate()){
+  if(_formKeySignUp.currentState!.validate() && image!=null){
     await _auth.createUserWithEmailAndPassword
       (email: email, password: password)
         .then((value) => {
@@ -320,12 +334,23 @@ void signUp(String email, String password,
       Fluttertoast.showToast(msg:e.message);
 
     });
+  }else{
+    Fluttertoast.showToast(msg: "Image can not be null");
   }
 
 }
+//  toFile ()async{
+//   var bytes = await rootBundle.load('assets\images\profile.png');
+//   String tempPath = (await getTemporaryDirectory()).path;
+//   File file = File('$tempPath/profile.png');
+//   await file.writeAsBytes(bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+//
+//   return file;
+// }
 void saveImage()async{
   User? _user= FirebaseAuth.instance.currentUser;
-  if(image==null) return;
+  if(image==null)
+    return;
   final destination= _user!.uid.toString();
   final ref= FirebaseStorage.instance
       .ref(destination);
@@ -339,6 +364,7 @@ void saveUserDetails() async{
   UserModel userModel=UserModel();
   userModel.uid=user!.uid;
   userModel.email= _emailController.text;
+  userModel.id= _idController.text;
   userModel.phone= _phoneController.text;
   userModel.age= _ageController.text;
   userModel.name= _nameController.text;
